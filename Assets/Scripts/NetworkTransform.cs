@@ -5,14 +5,28 @@ using UnityEngine;
 
 public class NetworkTransform : NetworkComponent
 {
+	public GameObject visual;
 	private readonly float smoothTime = 1f / NetworkCore.UpdateRate;
-	private Vector3 objective;
-	private Vector3 currentVelocity;
 
+	private Vector3 positionObjective;
+	private Vector3 positionVelocity;
 	private Quaternion rotationObjective;
 	private Quaternion rotationVelocity;
 
-	private const string UpdateCommand = "UPD";
+	private Vector3 lastPositionSent;
+	private Quaternion lastRotationSent;
+
+	private const string UpdateCommand = "1";
+	private bool dirty = true;
+
+	protected override void OnAwake()
+	{
+		base.OnAwake();
+		if (visual)
+		{
+			visual.SetActive(false);
+		}
+	}
 
 	private void OnEnable()
 	{
@@ -28,17 +42,24 @@ public class NetworkTransform : NetworkComponent
 	{
 		if (IsServer)
 		{
-			List<string> args = new List<string>()
+			Vector3 currentPosition = transform.position.Rounded();
+			if (dirty || currentPosition != lastPositionSent || Quaternion.Angle(lastRotationSent, transform.rotation) > 2)
 			{
-				transform.position.x.ToString("N2"),
-				transform.position.y.ToString("N2"),
-				transform.position.z.ToString("N2"),
-				transform.rotation.x.ToString("N2"),
-				transform.rotation.y.ToString("N2"),
-				transform.rotation.z.ToString("N2"),
-				transform.rotation.w.ToString("N2"),
-			};
-			SendToClient(UpdateCommand, args);
+				dirty = false;
+				lastPositionSent = currentPosition;
+				lastRotationSent = transform.rotation;
+				List<string> args = new List<string>()
+				{
+					transform.position.x.ToNetworkString(),
+					transform.position.y.ToNetworkString(),
+					transform.position.z.ToNetworkString(),
+					transform.rotation.x.ToNetworkString(),
+					transform.rotation.y.ToNetworkString(),
+					transform.rotation.z.ToNetworkString(),
+					transform.rotation.w.ToNetworkString()
+				};
+				SendToClient(UpdateCommand, args);
+			}
 		}
 	}
 
@@ -46,12 +67,12 @@ public class NetworkTransform : NetworkComponent
 	{
 		if (IsClient)
 		{
-			transform.position = Vector3.SmoothDamp(transform.position, objective, ref currentVelocity, smoothTime);
+			transform.position = Vector3.Distance(transform.position, positionObjective) > 2 ? positionObjective : Vector3.SmoothDamp(transform.position, positionObjective, ref positionVelocity, smoothTime);
 			transform.rotation = QuaternionUtil.SmoothDamp(transform.rotation, rotationObjective, ref rotationVelocity, smoothTime);
 		}
 		else if (IsServer)
 		{
-			objective = transform.position;
+			positionObjective = transform.position;
 		}
 	}
 
@@ -59,9 +80,10 @@ public class NetworkTransform : NetworkComponent
 	{
 		if (command.Equals(UpdateCommand))
 		{
+			dirty = false;
 			if (args.Count >= 3)
 			{
-				objective = new Vector3(float.Parse(args[0]), float.Parse(args[1]), float.Parse(args[2]));
+				positionObjective = new Vector3(float.Parse(args[0]), float.Parse(args[1]), float.Parse(args[2]));
 			}
 
 			if (args.Count >= 7)
@@ -69,10 +91,35 @@ public class NetworkTransform : NetworkComponent
 				rotationObjective = new Quaternion(float.Parse(args[3]), float.Parse(args[4]), float.Parse(args[5]), float.Parse(args[6]));
 			}
 		}
+
+		if (command.Equals(DirtyCommand))
+		{
+			dirty = true;
+		}
 	}
 
 	protected override IEnumerator NetworkUpdate()
 	{
-		yield break;
+		FlagDirtyToServer();
+		yield return new WaitUntil(() => !dirty);
+		if (visual)
+		{
+			visual.SetActive(true);
+		}
+	}
+}
+
+static class NetworkingExtensions
+{
+	public static string ToNetworkString(this float value)
+	{
+		return value.ToString("N2").TrimEnd('0').TrimEnd('.');
+	}
+
+	public static Vector3 Rounded(this Vector3 value)
+	{
+		value *= 100;
+		value = new Vector3(Mathf.Round(value.x), Mathf.Round(value.y), Mathf.Round(value.z));
+		return value / 100;
 	}
 }

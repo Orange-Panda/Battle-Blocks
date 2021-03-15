@@ -12,8 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16e79bdcc0e08ba47aac3c896c34d7a8, type: 3}
   m_Name: Network Contract
   m_EditorClassIdentifier: 
-  playerObject: {fileID: 6942155274455431891, guid: 4eea58d0dbadc524aa280e06419187a6,
-    type: 3}
+  playerObjectIndex: 0
   contractItems:
   - id: 0
+    lookupKey: player
     value: {fileID: 6942155274455431891, guid: 4eea58d0dbadc524aa280e06419187a6, type: 3}
+  - id: 1
+    lookupKey: enemy_spawner
+    value: {fileID: 5011686128316545649, guid: ca0b6fc0aa31c7f498e20cfdeaaac87b, type: 3}
+  - id: 2
+    lookupKey: enemy
+    value: {fileID: 3220719125430858928, guid: 6613ceee1ea22e049b43101a970aad6e, type: 3}

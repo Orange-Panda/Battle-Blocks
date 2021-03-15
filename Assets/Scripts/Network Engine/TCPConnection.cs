@@ -19,7 +19,7 @@ namespace NetworkEngine
 		public bool HasDisconnected { get; set; } = false;
 
 		private StringBuilder stringBuilder = new StringBuilder();
-		private const int BufferSize = 1024;
+		private const int BufferSize = 4096;
 		private byte[] buffer = new byte[BufferSize];
 		private bool messageReady = false;
 

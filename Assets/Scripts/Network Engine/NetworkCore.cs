@@ -21,11 +21,12 @@ namespace NetworkEngine
 		private int maxConnections = 32;
 		[SerializeField, DisableInPlayMode, Tooltip("Objects created, with server ownership, when the server is started.")]
 		private int[] initialObjects = new int[0];
-		public const int UpdateRate = 2;
+		public const int UpdateRate = 32;
 		public const float UpdateDelta = 1f / UpdateRate;
 
 		public Dictionary<int, TCPConnection> Connections { get; private set; } = new Dictionary<int, TCPConnection>();
 		public Dictionary<int, NetworkID> NetObjects { get; private set; } = new Dictionary<int, NetworkID>();
+		public event Action<int> ClientConnected = delegate { };
 		public event Action<int> ClientDisconnected = delegate { };
 		public event Action NetworkTick = delegate { };
 
@@ -329,6 +330,8 @@ namespace NetworkEngine
 
 					//Create NetworkPlayerManager
 					CreateNetworkObject(-1, ConnectionCount - 1, Vector3.zero);
+
+					ClientConnected(ConnectionCount - 1);
 				}
 			}
 		}
@@ -358,12 +361,11 @@ namespace NetworkEngine
 					connection.Socket.Shutdown(SocketShutdown.Both);
 					connection.Socket.Close();
 				}
-				finally
-				{
-					DestroyUserObjects(connectionID);
-					ClientDisconnected(connectionID);
-					Connections.Remove(connectionID);
-				}
+				catch { }
+
+				DestroyUserObjects(connectionID);
+				ClientDisconnected(connectionID);
+				Connections.Remove(connectionID);
 			}
 		}
 
@@ -472,11 +474,10 @@ namespace NetworkEngine
 				{
 					listenerTCP.Close();
 				}
-				finally
-				{
-					NetObjects.Clear();
-					Connections.Clear();
-				}
+				catch { }
+
+				NetObjects.Clear();
+				Connections.Clear();
 			}
 		}
 		#endregion

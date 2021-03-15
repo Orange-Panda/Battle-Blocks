@@ -19,6 +19,7 @@ namespace NetworkEngine
 		protected bool IsServer => NetworkCore.ActiveNetwork && NetworkCore.ActiveNetwork.IsServer;
 		protected bool IsLocalPlayer => networkID.IsLocalPlayer;
 		protected int Owner => networkID.Owner;
+		protected const string DirtyCommand = "D";
 
 		/// <summary>
 		/// The contract ID of this object. Allows all clients to create the same type of object.
@@ -65,6 +66,17 @@ namespace NetworkEngine
 			OnStart();
 			yield return new WaitUntil(() => networkID.NetworkReady);
 			StartCoroutine(NetworkUpdate());
+		}
+
+		/// <summary>
+		/// Send a dirty message to the server. Dirty must be implemented on a per object basis.
+		/// </summary>
+		protected void FlagDirtyToServer()
+		{
+			if (IsClient)
+			{
+				networkID.AddMessage(NetworkMessage.CreateMessage(NetworkMessage.Type.Command, new List<string>() { NetId.ToString(), DirtyCommand }));
+			}
 		}
 
 		/// <summary>

@@ -18,13 +18,13 @@ namespace NetworkEngine
 		{
 			TypeMessageEntry[] entries = new TypeMessageEntry[]
 			{
-				new TypeMessageEntry(Type.Okay, "OK"),
-				new TypeMessageEntry(Type.PlayerID, "PID"),
-				new TypeMessageEntry(Type.Disconnect, "DISC"),
-				new TypeMessageEntry(Type.Create, "CRT"),
-				new TypeMessageEntry(Type.Delete, "DLT"),
-				new TypeMessageEntry(Type.Command, "CMD"),
-				new TypeMessageEntry(Type.Update, "UPDT"),
+				new TypeMessageEntry(Type.Okay, "1"),
+				new TypeMessageEntry(Type.PlayerID, "2"),
+				new TypeMessageEntry(Type.Disconnect, "3"),
+				new TypeMessageEntry(Type.Create, "4"),
+				new TypeMessageEntry(Type.Delete, "5"),
+				new TypeMessageEntry(Type.Command, "6"),
+				new TypeMessageEntry(Type.Update, "7"),
 			};
 
 			typeMessageLookup = new Dictionary<Type, string>();

@@ -15,9 +15,20 @@ namespace NetworkEngine
 		public static Dictionary<int, GameObject> Lookup { get; private set; } = new Dictionary<int, GameObject>();
 
 		/// <summary>
+		/// A convenient dictionary to convert <see cref="NetworkContract.Item.lookupKey"/> to it's <see cref="NetworkContract.Item.id"/>.
+		/// </summary>
+		private static Dictionary<string, int> IndexLookup { get; set; } = new Dictionary<string, int>();
+
+		/// <summary>
 		/// The object to be spawned when a player connects to the server.
 		/// </summary>
 		public static GameObject PlayerObject { get; private set; }
+
+		public static bool TryGetIndex(string key, out int id)
+		{
+			id = -9999;
+			return !string.IsNullOrWhiteSpace(key) && IndexLookup.TryGetValue(key, out id);
+		}
 
 		//Initializes the Dictionary before it is used. See static constructors for more information.
 		static NetworkItems()
@@ -31,6 +42,7 @@ namespace NetworkEngine
 				foreach (NetworkContract.Item item in contract.ContractItems)
 				{
 					Lookup.Add(item.id, item.value);
+					IndexLookup.Add(item.lookupKey, item.id);
 				}
 			}
 			else

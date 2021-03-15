@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class Tank : NetworkComponent
 {
+	[SerializeField]
+	private Renderer[] renderers;
+
 	public override void HandleMessage(string command, List<string> args)
 	{
 		
@@ -12,15 +15,31 @@ public class Tank : NetworkComponent
 
 	protected override IEnumerator NetworkUpdate()
 	{
-		while (IsServer)
+		if (TryGetComponent(out Rigidbody rigidbody))
 		{
-			Vector3 goal = new Vector3(Random.Range(-5f, 5f), 0, Random.Range(-5f, 5f));
-			while (transform.position != goal)
+			if (IsClient)
 			{
-				transform.position = Vector3.MoveTowards(transform.position, goal, Time.deltaTime);
-				yield return null;
+				Destroy(rigidbody);
 			}
-			yield return new WaitForSeconds(2f);
+			else if (IsServer)
+			{
+				Spawner spawner = FindObjectOfType<Spawner>();
+				rigidbody.position = spawner.playerPoints[Random.Range(0, spawner.playerPoints.Length)];
+			}
+		}
+
+		yield return null;
+
+		foreach (Renderer renderer in renderers)
+		{
+			if (IsClient && IsLocalPlayer)
+			{
+				renderer.material.color = Color.green; 
+			}
+			else if (IsClient && !IsLocalPlayer)
+			{
+				renderer.material.color = Color.red;
+			}
 		}
 	}
 }
