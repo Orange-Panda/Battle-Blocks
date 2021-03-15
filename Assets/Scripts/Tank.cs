@@ -12,6 +12,15 @@ public class Tank : NetworkComponent
 
 	protected override IEnumerator NetworkUpdate()
 	{
-		throw new System.NotImplementedException();
+		while (IsServer)
+		{
+			Vector3 goal = new Vector3(Random.Range(-5f, 5f), 0, Random.Range(-5f, 5f));
+			while (transform.position != goal)
+			{
+				transform.position = Vector3.MoveTowards(transform.position, goal, Time.deltaTime);
+				yield return null;
+			}
+			yield return new WaitForSeconds(2f);
+		}
 	}
 }

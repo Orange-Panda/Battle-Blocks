@@ -21,10 +21,13 @@ namespace NetworkEngine
 		private int maxConnections = 32;
 		[SerializeField, DisableInPlayMode, Tooltip("Objects created, with server ownership, when the server is started.")]
 		private int[] initialObjects = new int[0];
+		public const int UpdateRate = 2;
+		public const float UpdateDelta = 1f / UpdateRate;
 
 		public Dictionary<int, TCPConnection> Connections { get; private set; } = new Dictionary<int, TCPConnection>();
 		public Dictionary<int, NetworkID> NetObjects { get; private set; } = new Dictionary<int, NetworkID>();
 		public event Action<int> ClientDisconnected = delegate { };
+		public event Action NetworkTick = delegate { };
 
 		#region Variables
 		private Coroutine serverListener;
@@ -101,6 +104,7 @@ namespace NetworkEngine
 		/// </summary>
 		private IEnumerator NetworkUpdate()
 		{
+			float updateTimer = 0;
 			while (IsConnected)
 			{
 				//Compose Master Message
@@ -136,7 +140,19 @@ namespace NetworkEngine
 					}
 				}
 
-				yield return new WaitUntil(() => MessageWaiting || MasterMessage != string.Empty);
+				do
+				{
+					updateTimer += UpdateDelta;
+
+					while (updateTimer > 0)
+					{
+						updateTimer = Mathf.MoveTowards(updateTimer, UpdateDelta * -5, Time.deltaTime);
+						yield return null;
+					}
+
+					NetworkTick();
+				}
+				while (!MessageWaiting && MasterMessage == string.Empty);
 			}
 		}
 

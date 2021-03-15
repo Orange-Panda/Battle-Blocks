@@ -583,6 +583,7 @@ GameObject:
   - component: {fileID: 6942155274455431890}
   - component: {fileID: -1960222613714038963}
   - component: {fileID: -2204206842774316663}
+  - component: {fileID: 2128283162731811754}
   m_Layer: 0
   m_Name: Player Tank
   m_TagString: Untagged
@@ -616,7 +617,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 0.8, z: 1.22}
+  m_Size: {x: 1, y: 0.8, z: 1.2}
   m_Center: {x: 0, y: 0.4, z: 0}
 --- !u!114 &-1960222613714038963
 MonoBehaviour:
@@ -641,6 +642,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 63ecb0ac55839d14cbd7b2cb24c941bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2128283162731811754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6942155274455431891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f10d3dd89e335949a98dd88f8158e6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &6942155274817131127
