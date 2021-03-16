@@ -53,13 +53,7 @@ public class Enemy : NetworkComponent
 
 			if (Health <= 0)
 			{
-				foreach (Tank tank in Tank.Tanks)
-				{
-					if (tank.Owner == attacker)
-					{
-						tank.GrantScore(1);
-					}
-				}
+				Tank.GrantScore(1, attacker);
 				NetworkCore.ActiveNetwork.DestroyNetworkObject(NetId);
 			}
 		}

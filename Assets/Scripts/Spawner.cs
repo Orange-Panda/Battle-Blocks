@@ -5,9 +5,9 @@ using UnityEngine;
 
 public class Spawner : NetworkComponent
 {
-	private List<GameObject> enemies = new List<GameObject>();
 	public Vector3[] enemyPoints = new Vector3[4];
 	public Vector3[] playerPoints = new Vector3[4];
+	private List<GameObject> enemies = new List<GameObject>();
 
 	private void OnDrawGizmosSelected()
 	{
@@ -25,11 +25,6 @@ public class Spawner : NetworkComponent
 		}
 	}
 
-	public override void HandleMessage(string command, List<string> args)
-	{
-		
-	}
-
 	protected override IEnumerator NetworkUpdate()
 	{
 		while (IsServer)
@@ -39,7 +34,7 @@ public class Spawner : NetworkComponent
 				enemies.Add(NetworkCore.ActiveNetwork.CreateNetworkObject(index, -1, enemyPoints[Random.Range(0, enemyPoints.Length)]));
 			}
 
-			yield return new WaitForSeconds(1f);
+			yield return new WaitForSeconds(Random.Range(1f, 4f));
 
 			for (int i = 0; i < enemies.Count; i++)
 			{
@@ -51,4 +46,6 @@ public class Spawner : NetworkComponent
 			}
 		}
 	}
+
+	public override void HandleMessage(string command, List<string> args) { }
 }

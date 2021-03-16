@@ -3,21 +3,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// A predominently server side component which causes a projectile to move, deal damage, and be destroyed.
+/// </summary>
 public class TankBullet : NetworkComponent
 {
-	private float speed = 15;
+	[SerializeField]
+	private Renderer[] renderers;
+	private float speed = 25;
 	private bool used = false;
-
-	public override void HandleMessage(string command, List<string> args)
-	{
-		
-	}
 
 	protected override IEnumerator NetworkUpdate()
 	{
 		if (transform.TryGetComponent(out Rigidbody rigidbody) && IsClient)
 		{
 			Destroy(rigidbody);
+		}
+
+		foreach (Renderer renderer in renderers)
+		{
+			if (IsClient && IsLocalPlayer)
+			{
+				renderer.material.color = Color.green;
+			}
+			else if (IsClient && !IsLocalPlayer)
+			{
+				renderer.material.color = Color.red;
+			}
 		}
 
 		yield return new WaitForSeconds(10f);
@@ -60,4 +72,6 @@ public class TankBullet : NetworkComponent
 			}
 		}
 	}
+
+	public override void HandleMessage(string command, List<string> args) { }
 }
