@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 11646974}
   m_Layer: 0
   m_Name: Inner Wall
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 8
@@ -234,7 +234,7 @@ GameObject:
   - component: {fileID: 291108886}
   m_Layer: 0
   m_Name: Inner Wall
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 8
@@ -327,7 +327,7 @@ GameObject:
   - component: {fileID: 355241261}
   m_Layer: 0
   m_Name: Inner Wall
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 8
@@ -420,7 +420,7 @@ GameObject:
   - component: {fileID: 630546511}
   m_Layer: 0
   m_Name: Wall
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -513,7 +513,7 @@ GameObject:
   - component: {fileID: 642860246}
   m_Layer: 0
   m_Name: Inner Wall
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 8
@@ -698,7 +698,7 @@ GameObject:
   - component: {fileID: 875014865}
   m_Layer: 0
   m_Name: Inner Wall
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 8
@@ -791,7 +791,7 @@ GameObject:
   - component: {fileID: 890989133}
   m_Layer: 0
   m_Name: Inner Wall
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 8
@@ -1297,7 +1297,7 @@ GameObject:
   - component: {fileID: 1349625449}
   m_Layer: 0
   m_Name: Wall
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1390,7 +1390,7 @@ GameObject:
   - component: {fileID: 1507953591}
   m_Layer: 0
   m_Name: Wall
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1483,7 +1483,7 @@ GameObject:
   - component: {fileID: 1512672502}
   m_Layer: 0
   m_Name: Inner Wall
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 8
@@ -1576,7 +1576,7 @@ GameObject:
   - component: {fileID: 1622668324}
   m_Layer: 0
   m_Name: Inner Wall
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 8
@@ -1669,7 +1669,7 @@ GameObject:
   - component: {fileID: 1633500421}
   m_Layer: 0
   m_Name: Inner Wall
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 8
@@ -1807,7 +1807,7 @@ GameObject:
   - component: {fileID: 1698807880}
   m_Layer: 0
   m_Name: Inner Wall
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 8
@@ -1900,7 +1900,7 @@ GameObject:
   - component: {fileID: 1792700108}
   m_Layer: 0
   m_Name: Wall
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

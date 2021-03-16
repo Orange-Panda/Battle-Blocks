@@ -15,7 +15,7 @@ public class NetworkTransform : NetworkComponent
 	private Vector3 lastPositionSent;
 	private Quaternion lastRotationSent;
 
-	private const string UpdateCommand = "1";
+	private const string UpdateCommand = "P";
 	private bool dirty = true;
 
 	protected override void OnAwake()

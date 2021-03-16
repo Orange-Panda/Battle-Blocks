@@ -23,3 +23,6 @@ MonoBehaviour:
   - id: 2
     lookupKey: enemy
     value: {fileID: 3220719125430858928, guid: 6613ceee1ea22e049b43101a970aad6e, type: 3}
+  - id: 3
+    lookupKey: player_bullet
+    value: {fileID: 158530080204663155, guid: 57cdda1c79776aa40941907d21fdfe8e, type: 3}

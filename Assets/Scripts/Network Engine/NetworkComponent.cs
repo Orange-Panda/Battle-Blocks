@@ -17,8 +17,8 @@ namespace NetworkEngine
 
 		protected bool IsClient => NetworkCore.ActiveNetwork && NetworkCore.ActiveNetwork.IsClient;
 		protected bool IsServer => NetworkCore.ActiveNetwork && NetworkCore.ActiveNetwork.IsServer;
-		protected bool IsLocalPlayer => networkID.IsLocalPlayer;
-		protected int Owner => networkID.Owner;
+		public bool IsLocalPlayer => networkID.IsLocalPlayer;
+		public int Owner => networkID.Owner;
 		protected const string DirtyCommand = "D";
 
 		/// <summary>
