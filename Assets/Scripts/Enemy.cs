@@ -37,15 +37,15 @@ public class Enemy : NetworkComponent
 		}
 	}
 
-	private void OnTriggerEnter(Collider other)
+	private void OnCollisionEnter(Collision collision)
 	{
-		if (other.gameObject.TryGetComponent(out Tank tank))
+		if (collision.gameObject.TryGetComponent(out Tank tank))
 		{
-			tank.TakeDamage();
+			tank.TakeDamage(-10);
 		}
 	}
 
-	public void TakeDamage(int value = 1)
+	public void TakeDamage(int attacker, int value = 1)
 	{
 		if (IsServer)
 		{
@@ -53,6 +53,13 @@ public class Enemy : NetworkComponent
 
 			if (Health <= 0)
 			{
+				foreach (Tank tank in Tank.Tanks)
+				{
+					if (tank.Owner == attacker)
+					{
+						tank.GrantScore(1);
+					}
+				}
 				NetworkCore.ActiveNetwork.DestroyNetworkObject(NetId);
 			}
 		}
@@ -65,28 +72,15 @@ public class Enemy : NetworkComponent
 			Spawner spawner = FindObjectOfType<Spawner>();
 			NavMeshAgent agent = gameObject.AddComponent<NavMeshAgent>();
 			agent.radius = 0.1f;
-			agent.speed = Random.Range(2f, 6f);
+			agent.speed = Random.Range(4f, 8f);
 
 			while (IsServer)
 			{
-				List<Vector3> pointList = new List<Vector3>(spawner.enemyPoints);
-				for (int i = 0; i < pointList.Count; i++)
-				{
-					int randIndex = Random.Range(0, pointList.Count);
-					Vector3 temp = pointList[randIndex];
-					pointList[randIndex] = pointList[i];
-					pointList[i] = temp;
-				}
-				Queue<Vector3> points = new Queue<Vector3>(pointList);
-
-				while (points.Count > 0)
-				{
-					Vector3 goal = points.Dequeue();
-					agent.destination = goal;
-					yield return new WaitUntil(() => Vector3.Distance(transform.position, goal) < 1);
-				}
+				Vector3 goal = spawner.enemyPoints[Random.Range(0, spawner.enemyPoints.Length)];
+				agent.destination = goal;
+				yield return new WaitUntil(() => Vector3.Distance(transform.position, goal) < 1);
+				yield return new WaitForSeconds(Random.Range(0.4f, 2f));
 			}
 		}
-		yield break;
 	}
 }

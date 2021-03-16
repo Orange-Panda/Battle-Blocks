@@ -44,13 +44,13 @@ public class TankBullet : NetworkComponent
 			if (other.gameObject.TryGetComponent(out Enemy enemy))
 			{
 				used = true;
-				enemy.TakeDamage();
+				enemy.TakeDamage(Owner);
 				NetworkCore.ActiveNetwork.DestroyNetworkObject(NetId);
 			}
 			else if (other.gameObject.TryGetComponent(out Tank tank) && tank.Owner != Owner)
 			{
 				used = true;
-				tank.TakeDamage();
+				tank.TakeDamage(Owner);
 				NetworkCore.ActiveNetwork.DestroyNetworkObject(NetId);
 			}
 			else if (other.CompareTag("Wall"))

@@ -34,13 +34,12 @@ public class Spawner : NetworkComponent
 	{
 		while (IsServer)
 		{	
-			if (NetworkCore.ActiveNetwork.Connections.Count > 0 && enemies.Count < 32 && NetworkItems.TryGetIndex("enemy", out int index))
+			if (NetworkCore.ActiveNetwork.Connections.Count > 0 && enemies.Count < 10 && NetworkItems.TryGetIndex("enemy", out int index))
 			{
 				enemies.Add(NetworkCore.ActiveNetwork.CreateNetworkObject(index, -1, enemyPoints[Random.Range(0, enemyPoints.Length)]));
-				yield return new WaitForSeconds(0.1f);
 			}
 
-			yield return new WaitForSeconds(0.1f);
+			yield return new WaitForSeconds(1f);
 
 			for (int i = 0; i < enemies.Count; i++)
 			{

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5011686128316545663}
   - component: {fileID: 5011686128316545662}
   m_Layer: 0
-  m_Name: Enemy Spawner
+  m_Name: Spawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -60,8 +60,7 @@ MonoBehaviour:
   enemyPoints:
   - {x: -20, y: 0, z: 6}
   - {x: 17, y: 0, z: 20}
-  - {x: -17, y: 0, z: -18}
+  - {x: 0, y: 0, z: -18}
   playerPoints:
-  - {x: -19, y: 0, z: -1.5}
   - {x: -8, y: 0, z: -4}
   - {x: -19, y: 0, z: 20}

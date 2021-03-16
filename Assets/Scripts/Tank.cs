@@ -16,8 +16,10 @@ public class Tank : NetworkComponent
 	private float speed = 5;
 	private float attackCooldown = 0;
 
-	private int Health { get; set; } = 10;
-	private const int MaxHealth = 10;
+	public int Score { get; private set; }
+	public int Health { get; private set; } = 10;
+	public const int MaxHealth = 10;
+	public static List<Tank> Tanks { get; private set; } = new List<Tank>();
 
 	protected override void OnAwake()
 	{
@@ -28,11 +30,13 @@ public class Tank : NetworkComponent
 	private void OnEnable()
 	{
 		NetworkCore.ActiveNetwork.NetworkTick += ActiveNetwork_NetworkTick;
+		Tanks.Add(this);
 	}
 
 	private void OnDisable()
 	{
 		NetworkCore.ActiveNetwork.NetworkTick -= ActiveNetwork_NetworkTick;
+		Tanks.Remove(this);
 	}
 
 	private void Update()
@@ -46,6 +50,14 @@ public class Tank : NetworkComponent
 				attackCooldown = 0.5f;
 				SendToServer(AttackMessage);
 			}
+		}
+	}
+
+	public void GrantScore(int value)
+	{
+		if (IsServer)
+		{
+			Score += value;
 		}
 	}
 
@@ -63,7 +75,12 @@ public class Tank : NetworkComponent
 		
 		if (IsServer)
 		{
-			SendToServer(StatusMessage, Health.ToString());
+			List<string> args = new List<string>()
+			{
+				Health.ToString(),
+				Score.ToString()
+			};
+			SendToClient(StatusMessage, args);
 		}
 	}
 
@@ -74,9 +91,10 @@ public class Tank : NetworkComponent
 			input = new Vector2(x, y);
 		}
 
-		if (command.Equals(StatusMessage) && args.Count >= 1 && int.TryParse(args[0], out int value))
+		if (command.Equals(StatusMessage) && args.Count >= 2 && int.TryParse(args[0], out int health) && int.TryParse(args[1], out int score))
 		{
-			Health = value;
+			Health = health;
+			Score = score;
 		}
 
 		if (command.Equals(AttackMessage) && NetworkItems.TryGetIndex("player_bullet", out int index))
@@ -94,7 +112,7 @@ public class Tank : NetworkComponent
 		}
 	}
 
-	public void TakeDamage(int value = 1)
+	public void TakeDamage(int attacker, int value = 1)
 	{
 		if (IsServer)
 		{
@@ -102,9 +120,18 @@ public class Tank : NetworkComponent
 
 			if (Health <= 0)
 			{
+				foreach (Tank tank in Tanks)
+				{
+					if (tank.Owner == attacker)
+					{
+						tank.GrantScore(5);
+					}
+				}
+
 				Spawner spawner = FindObjectOfType<Spawner>();
 				rigidbody.position = spawner.playerPoints[Random.Range(0, spawner.playerPoints.Length)];
 				Health = MaxHealth;
+				Score -= 10;
 			}
 		}
 	}
