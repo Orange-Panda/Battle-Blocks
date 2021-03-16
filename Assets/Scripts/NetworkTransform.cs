@@ -6,7 +6,6 @@ using UnityEngine;
 public class NetworkTransform : NetworkComponent
 {
 	public GameObject visual;
-	private readonly float smoothTime = 1f / NetworkCore.UpdateRate;
 
 	private Vector3 positionObjective;
 	private Vector3 positionVelocity;
@@ -67,8 +66,8 @@ public class NetworkTransform : NetworkComponent
 	{
 		if (IsClient)
 		{
-			transform.position = Vector3.Distance(transform.position, positionObjective) > 2 ? positionObjective : Vector3.SmoothDamp(transform.position, positionObjective, ref positionVelocity, smoothTime);
-			transform.rotation = QuaternionUtil.SmoothDamp(transform.rotation, rotationObjective, ref rotationVelocity, smoothTime);
+			transform.position = Vector3.Distance(transform.position, positionObjective) > 2 ? positionObjective : Vector3.SmoothDamp(transform.position, positionObjective, ref positionVelocity, NetworkCore.UpdateDelta);
+			transform.rotation = QuaternionUtil.SmoothDamp(transform.rotation, rotationObjective, ref rotationVelocity, NetworkCore.UpdateDelta);
 		}
 		else if (IsServer)
 		{
@@ -102,24 +101,10 @@ public class NetworkTransform : NetworkComponent
 	{
 		FlagDirtyToServer();
 		yield return new WaitUntil(() => !dirty);
+		yield return new WaitForSeconds(NetworkCore.UpdateDelta);
 		if (visual)
 		{
 			visual.SetActive(true);
 		}
-	}
-}
-
-static class NetworkingExtensions
-{
-	public static string ToNetworkString(this float value)
-	{
-		return value.ToString("N2").TrimEnd('0').TrimEnd('.');
-	}
-
-	public static Vector3 Rounded(this Vector3 value)
-	{
-		value *= 100;
-		value = new Vector3(Mathf.Round(value.x), Mathf.Round(value.y), Mathf.Round(value.z));
-		return value / 100;
 	}
 }

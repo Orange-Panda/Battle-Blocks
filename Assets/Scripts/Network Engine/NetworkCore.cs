@@ -21,7 +21,7 @@ namespace NetworkEngine
 		private int maxConnections = 32;
 		[SerializeField, DisableInPlayMode, Tooltip("Objects created, with server ownership, when the server is started.")]
 		private int[] initialObjects = new int[0];
-		public const int UpdateRate = 32;
+		public const int UpdateRate = 50;
 		public const float UpdateDelta = 1f / UpdateRate;
 
 		public Dictionary<int, TCPConnection> Connections { get; private set; } = new Dictionary<int, TCPConnection>();
