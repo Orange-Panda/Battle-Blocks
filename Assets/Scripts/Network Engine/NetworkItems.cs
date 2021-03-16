@@ -24,6 +24,12 @@ namespace NetworkEngine
 		/// </summary>
 		public static GameObject PlayerObject { get; private set; }
 
+		/// <summary>
+		/// Try to get an integer id for an object in the <see cref="Lookup"/> dictionary.
+		/// </summary>
+		/// <param name="key">The string key defined in <see cref="NetworkContract.Item.lookupKey"/></param>
+		/// <param name="id">The id found by the function when successful. Otherwise is meaninglessly -9999.</param>
+		/// <returns>True when <paramref name="id"/> has been successfully found. Otherwise returns false.</returns>
 		public static bool TryGetIndex(string key, out int id)
 		{
 			id = -9999;

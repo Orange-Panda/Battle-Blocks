@@ -14,17 +14,12 @@ namespace NetworkEngine
 	public abstract class NetworkComponent : MonoBehaviour
 	{
 		protected NetworkID networkID;
-
-		protected bool IsClient => NetworkCore.ActiveNetwork && NetworkCore.ActiveNetwork.IsClient;
-		protected bool IsServer => NetworkCore.ActiveNetwork && NetworkCore.ActiveNetwork.IsServer;
-		public bool IsLocalPlayer => networkID.IsLocalPlayer;
-		public int Owner => networkID.Owner;
 		protected const string DirtyCommand = "D";
 
-		/// <summary>
-		/// The contract ID of this object. Allows all clients to create the same type of object.
-		/// </summary>
-		protected int ContractID => networkID.ContractID;
+		public bool IsLocalPlayer => networkID.NetworkReady && NetworkCore.ActiveNetwork && NetworkCore.ActiveNetwork.LocalPlayerId == networkID.Owner;
+		protected bool IsClient => NetworkCore.ActiveNetwork && NetworkCore.ActiveNetwork.IsClient;
+		protected bool IsServer => NetworkCore.ActiveNetwork && NetworkCore.ActiveNetwork.IsServer;
+		public int Owner => networkID.Owner;
 
 		/// <summary>
 		/// The instance ID of the object on the server. Essentially the identifier for this particular object.

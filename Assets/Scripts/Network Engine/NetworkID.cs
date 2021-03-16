@@ -30,6 +30,9 @@ namespace NetworkEngine
 		/// </summary>
 		public int Owner { get; set; } = -10;
 		public bool NetworkReady { get; private set; }
+		/// <summary>
+		/// Enqueued messages are sent on the next <see cref="NetworkCore.NetworkTick"/>.
+		/// </summary>
 		public string EnqueuedMessage { get; private set; } = string.Empty;
 
 		// Get properties
@@ -37,9 +40,8 @@ namespace NetworkEngine
 		/// The unique contract id for this gameObject. Allows all clients to create the same object on each instance.
 		/// </summary>
 		public int ContractID => contractID;
-		public bool IsServer => NetworkCore.ActiveNetwork && NetworkCore.ActiveNetwork.IsServer;
-		public bool IsClient => NetworkCore.ActiveNetwork && NetworkCore.ActiveNetwork.IsClient;
-		public bool IsLocalPlayer => NetworkReady && NetworkCore.ActiveNetwork && NetworkCore.ActiveNetwork.LocalPlayerId == Owner;
+		private bool IsServer => NetworkCore.ActiveNetwork && NetworkCore.ActiveNetwork.IsServer;
+		private bool IsClient => NetworkCore.ActiveNetwork && NetworkCore.ActiveNetwork.IsClient;
 
 		private IEnumerator Start()
 		{
@@ -70,17 +72,30 @@ namespace NetworkEngine
 			NetworkReady = true;
 		}
 
+		/// <summary>
+		/// Add a message to <see cref="EnqueuedMessage"/> to be sent over the network.
+		/// </summary>
+		/// <param name="msg">A formatted message to send over the network. Usually this should be created by <see cref="NetworkMessage.GetParameters(string)"/></param>
 		public void AddMessage(string msg)
 		{
 			EnqueuedMessage += msg;
 			NetworkCore.ActiveNetwork.MessageWaiting = true;
 		}
 
+		/// <summary>
+		/// Clears <see cref="EnqueuedMessage"/>.
+		/// </summary>
+		/// <remarks>Ususally exclusively done after the message has been sent by <see cref="NetworkCore"/>.</remarks>
 		public void ClearMessage()
 		{
 			EnqueuedMessage = string.Empty;
 		}
 
+		/// <summary>
+		/// Handle an incoming message from the network on this particular network object.
+		/// </summary>
+		/// <param name="command">The local command defined on a per <see cref="NetworkComponent"/> basis.</param>
+		/// <param name="args">Argument(s) for the command defined.</param>
 		public void NetworkMessage(string command, List<string> args)
 		{
 			if (NetworkReady)

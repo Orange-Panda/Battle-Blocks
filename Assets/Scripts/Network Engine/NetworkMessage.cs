@@ -2,7 +2,6 @@
 
 namespace NetworkEngine
 {
-
 	/// <summary>
 	/// Creates (<see cref="CreateMessage(Type, List{string})"/>) and parses (<see cref="GetParameters(string)"/>) network messages.
 	/// </summary>
@@ -112,6 +111,9 @@ namespace NetworkEngine
 			Null, Okay, PlayerID, Disconnect, Create, Delete, Command, Update
 		}
 
+		/// <summary>
+		/// A data structure that associates a <see cref="Type"/> with a string for sending over the network.
+		/// </summary>
 		private class TypeMessageEntry
 		{
 			public Type type;

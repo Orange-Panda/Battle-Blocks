@@ -63,6 +63,92 @@ namespace NetworkEngine
 		}
 
 		/// <summary>
+		/// Handles individual commands based on the message's <see cref="NetworkMessage.Parameters"/>
+		/// </summary>
+		public void HandleCommand(string command)
+		{
+			NetworkMessage.Parameters param = NetworkMessage.GetParameters(command);
+			if (param.type == NetworkMessage.Type.PlayerID)
+			{
+				if (IsClient && param.args.Count > 0 && int.TryParse(param.args[0], out int id))
+				{
+					LocalPlayerId = id;
+					Connections[0].PlayerID = id;
+				}
+			}
+			else if (param.type == NetworkMessage.Type.Disconnect)
+			{
+				if (IsServer && int.TryParse(param.args[0], out int disconnectID))
+				{
+					DisconnectUser(disconnectID);
+				}
+				else if (IsClient)
+				{
+					LeaveGame();
+				}
+			}
+			else if (param.type == NetworkMessage.Type.Create)
+			{
+				if (IsClient && param.args.Count >= 3)
+				{
+					Vector3 position = Vector3.zero;
+					if (param.args.Count >= 6)
+					{
+						try
+						{
+							position = new Vector3(float.Parse(param.args[3]), float.Parse(param.args[4]), float.Parse(param.args[5]));
+						}
+						catch
+						{
+							position = Vector3.zero;
+						}
+					}
+
+					Quaternion rotation = Quaternion.identity;
+					if (param.args.Count >= 10)
+					{
+						try
+						{
+							rotation = new Quaternion(float.Parse(param.args[6]), float.Parse(param.args[7]), float.Parse(param.args[8]), float.Parse(param.args[9]));
+						}
+						catch
+						{
+							rotation = Quaternion.identity;
+						}
+					}
+
+					if (int.TryParse(param.args[0], out int contractID) && int.TryParse(param.args[1], out int owner) && int.TryParse(param.args[2], out int netID))
+					{
+						GameObject newGameObject = Instantiate(contractID == -1 ? NetworkItems.PlayerObject : NetworkItems.Lookup[contractID], position, rotation);
+
+						if (newGameObject.TryGetComponent(out NetworkID networkID))
+						{
+							networkID.Owner = owner;
+							networkID.NetId = netID;
+							NetObjects[netID] = networkID;
+						}
+					}
+				}
+			}
+			else if (param.type == NetworkMessage.Type.Delete)
+			{
+				if (IsClient && param.args.Count > 0 && int.TryParse(param.args[0], out int netID))
+				{
+					DestroyNetworkObject(netID);
+				}
+			}
+			else if ((param.type == NetworkMessage.Type.Command && IsServer) || (param.type == NetworkMessage.Type.Update && IsClient))
+			{
+				if (param.args.Count >= 2 && int.TryParse(param.args[0], out int netID) && NetObjects.ContainsKey(netID))
+				{
+					string type = param.args[1];
+					param.args.RemoveRange(0, 2);
+					NetObjects[netID].NetworkMessage(type, param.args);
+				}
+			}
+		}
+
+		/// <summary>
 		/// Leave the game by disconnecting or closing the server.
 		/// </summary>
 		public void LeaveGame()
